@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
 import './about.css';
+import { HomeButton } from '../../components';
 
 type Source = {
   name: string;
@@ -39,9 +39,7 @@ export const AboutScreen: FC = () => {
           ))}
         </ul>
       </div>
-      <Link to="/">
-        <button type="button">Home</button>
-      </Link>
+      <HomeButton />
     </>
   );
 };

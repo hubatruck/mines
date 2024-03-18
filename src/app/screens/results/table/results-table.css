@@ -1,0 +1,16 @@
+table {
+  border-collapse: collapse;
+}
+thead th {
+  background-color: lightgray;
+  border: solid 1px black;
+  padding: 0.5rem;
+}
+tr td{
+  border: solid 1px black;
+  padding:0.25rem;
+}
+
+tr:hover {
+  background-color: aliceblue;
+}
