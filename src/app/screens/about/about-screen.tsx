@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import './about.css';
-import { HomeButton } from '../../components';
+import { AppHeader, HomeButton } from '../../components';
 
 type Source = {
   name: string;
@@ -15,7 +15,7 @@ export const AboutScreen: FC = () => {
   ];
   return (
     <>
-      <h1>Mines 💣 | About</h1>
+      <AppHeader subTitle="About" />
       <div>
         <b>Mines: Minesweeper like game, made in React + TypeScript.</b>
         <br />

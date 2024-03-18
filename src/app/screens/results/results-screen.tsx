@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Result } from './types/result-types';
 import { ResultTable } from './table/result-table';
-import { HomeButton } from '../../components';
+import { AppHeader, HomeButton } from '../../components';
 import { BOARD_SIZE } from '../../types';
 
 export const ResultsScreen: FC = () => {
@@ -14,7 +14,7 @@ export const ResultsScreen: FC = () => {
 
   return (
     <>
-      <h1>Mines💣 | Results</h1>
+      <AppHeader subTitle="Results" />
       {results.length ? <ResultTable results={results} /> : <span className="noResults">No results</span>}
       <HomeButton />
     </>
