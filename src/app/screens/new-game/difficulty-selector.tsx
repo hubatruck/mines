@@ -1,8 +1,6 @@
 import { ChangeEvent, FC, useCallback, useState } from 'react';
 import { BOARD_SIZE } from '../../types';
 
-import './difficulty.css';
-
 const difficultyMap = {
   [BOARD_SIZE.EASY]: 'Easy',
   [BOARD_SIZE.EXPERT]: 'Expert',
