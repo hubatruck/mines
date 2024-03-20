@@ -1,41 +1,51 @@
 import { useDebouncedCallback } from 'use-debounce';
-import React, { FC, useCallback, useEffect, useRef } from 'react';
-import { GameBoard, Position } from '../game-types';
+import React, { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
+import { GameBoard, HandlerArgs } from '../game-types';
 
 import { useCanvasUtil } from './canvas-util-hook';
 import './canvas.css';
 
 type Props = {
-  onClick: (pos: Position) => unknown;
-  gameBoard: GameBoard;
+  onClick: (args: HandlerArgs) => unknown;
 };
 
-export const Canvas: FC<Props> = ({ onClick, gameBoard }) => {
-  const ref = useRef<HTMLCanvasElement>(null);
-  const cu = useCanvasUtil(ref);
-  const cellCount = gameBoard.length;
+export const Canvas = forwardRef<MutableRefObject<GameBoard>, Props>(
+  ({ onClick }, gameBoard: ForwardedRef<MutableRefObject<GameBoard>>) => {
+    const ref = useRef<HTMLCanvasElement>(null);
+    const cu = useCanvasUtil(ref);
+    const cellCount = useMemo(() => gameBoard?.current.size(), []);
 
-  const reDraw = useCallback((): void => {
-    setTimeout((): void => {
-      cu.fitScreen();
-      cu.drawFields(gameBoard);
-      cu.drawLines(cellCount);
-    }, 500);
-  }, [cellCount, cu.drawLines, cu.fitScreen]);
+    const reDraw = useCallback((): void => {
+      setTimeout((): void => {
+        cu.fitScreen();
+        cu.drawFields(gameBoard?.current);
+        cu.drawLines(cellCount);
+      }, 10);
+    }, [cellCount, cu.drawLines, cu.fitScreen]);
 
-  const debouncedReDraw = useDebouncedCallback(() => reDraw(), 200);
+    const debouncedReDraw = useDebouncedCallback(() => reDraw(), 200);
 
-  useEffect((): void => {
-    reDraw();
-    console.log(gameBoard);
-  }, [gameBoard]);
+    useEffect((): void => {
+      reDraw();
+    }, []);
 
-  const onClickHandler = useCallback((event: React.MouseEvent<HTMLCanvasElement>): void => {
-    console.log(event.clientX, event.clientY);
-    onClick(cu.getClickedCell({ x: event.clientX, y: event.clientY, cellCount }));
-  }, []);
+    const onClickHandler = useCallback(
+      (event: React.MouseEvent<HTMLCanvasElement>): void => {
+        event.preventDefault();
 
-  window.addEventListener('resize', debouncedReDraw);
+        onClick({
+          pos: cu.getClickedCell({ x: event.clientX, y: event.clientY, cellCount }),
+          isLeftClick: event.button === 0,
+        });
+        reDraw();
+      },
+      [reDraw],
+    );
 
-  return <canvas ref={ref} onClick={onClickHandler} />;
-};
+    window.addEventListener('resize', debouncedReDraw);
+
+    return <canvas ref={ref} onContextMenu={onClickHandler} onClick={onClickHandler} />;
+  },
+);
+
+Canvas.displayName = 'Canvas';

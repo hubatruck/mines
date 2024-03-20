@@ -1,8 +1,8 @@
 import { FC, useCallback, useState } from 'react';
-import { AppHeader, HomeButton } from '../../components';
-import { DifficultySelector } from './difficulty-selector';
-import { BOARD_SIZE } from '../../types';
 import { useNavigate } from 'react-router-dom';
+import { AppHeader, HomeButton } from '../../components';
+import { DifficultySelector } from './difficulty-selector.tsx';
+import { BOARD_SIZE } from '../../types';
 
 export const NewGameScreen: FC = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export const NewGameScreen: FC = () => {
   }, [difficulty]);
 
   return (
-    <>
+    <div className="centered">
       <AppHeader subTitle="Game setup" />
 
       <div className="difficulty">
@@ -27,6 +27,6 @@ export const NewGameScreen: FC = () => {
       </button>
 
       <HomeButton />
-    </>
+    </div>
   );
 };

@@ -4,6 +4,7 @@ import { AboutScreen } from './app/screens/about';
 import { ResultsScreen } from './app/screens/results';
 import { NewGameScreen } from './app/screens/new-game';
 import { GameScreen } from './app/screens/game';
+import { GameLostScreen, GameWonScreen } from './app/screens/game-over';
 
 const App = () => {
   return (
@@ -11,6 +12,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/new" />} />
         <Route path="/game/:difficulty" element={<GameScreen />} />
+        <Route path="/over" element={<GameLostScreen />} />
+        <Route path="/won" element={<GameWonScreen />} />
         <Route path="/new" element={<NewGameScreen />} />
         <Route path="/results" element={<ResultsScreen />} />
         <Route path="/about" element={<AboutScreen />} />

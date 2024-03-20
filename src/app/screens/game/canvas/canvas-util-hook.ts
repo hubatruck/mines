@@ -9,7 +9,7 @@ interface RefObject<T> {
 }
 
 const getColor = ({ state, isBomb }: GameField): string => {
-  if (state === FieldState.FLAGGED) return 'green';
+  if (state === FieldState.FLAGGED) return 'lightgreen';
   if (isBomb && state === FieldState.VISITED) return 'red';
   if (state === FieldState.VISITED) return 'white';
   return 'gray';
