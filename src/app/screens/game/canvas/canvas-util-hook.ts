@@ -90,13 +90,13 @@ export const useCanvasUtil = (canvasRef: RefObject<HTMLCanvasElement>) => {
     const ctx = canvas?.getContext('2d');
     if (!(canvas && ctx)) return;
 
-    const cellCount = gameBoard.length;
+    const cellCount = gameBoard.size();
 
     const { h: horizontalSize, v: verticalSize } = getCellSize(cellCount);
 
     for (let row = 0; row < cellCount; row++) {
       for (let column = 0; column < cellCount; column++) {
-        const field: GameField = gameBoard[row][column];
+        const field: GameField = gameBoard.at(row, column);
 
         ctx.beginPath();
         ctx.fillStyle = getColor(field);

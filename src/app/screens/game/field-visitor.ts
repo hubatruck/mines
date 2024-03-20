@@ -1,11 +1,15 @@
+import React from 'react';
 import { FieldState, GameBoard, GameField, Position } from './game-types';
 
-const visitor = ({ row, col }: Position, gameBoard: GameBoard) => {
-  const current = gameBoard[row][col];
-  current.state = FieldState.VISITED;
-  if (current.bombNeighbours > 0 || current.isBomb) return;
+const visitor = (pos: Position, gameBoard: GameBoard): number => {
+  const { row, col } = pos;
 
-  const size = gameBoard.length;
+  const current: GameField = gameBoard.at(pos);
+  current.state = FieldState.VISITED;
+  if (current.bombNeighbours > 0 || current.isBomb) return 1;
+
+  let visitedCount = 1;
+  const size = gameBoard.size();
   [
     [-1, -1],
     [-1, 0],
@@ -20,9 +24,10 @@ const visitor = ({ row, col }: Position, gameBoard: GameBoard) => {
     const newCol = col + offCol;
 
     if (newCol >= 0 && newCol < size && newRow >= 0 && newRow < size) {
-      const neighbour = gameBoard[newRow][newCol];
+      const neighbour = gameBoard.at(newRow, newCol);
+
       if (!(neighbour.isBomb || neighbour.state === FieldState.VISITED)) {
-        visitor(
+        visitedCount += visitor(
           {
             row: newRow,
             col: newCol,
@@ -32,12 +37,19 @@ const visitor = ({ row, col }: Position, gameBoard: GameBoard) => {
       }
     }
   });
+  return visitedCount;
 };
 
-export const visitField = (pos: Position, gameBoard: GameBoard) => {
-  const boardCopy = gameBoard.map((r: GameField[]): GameField[] => r.slice(0));
+export const visitField = (pos: Position, gameBoard: React.MutableRefObject<GameBoard>): void => {
+  const visitedCount = visitor(pos, gameBoard.current);
+  gameBoard.current.openFields(visitedCount);
+};
 
-  visitor(pos, boardCopy);
+export const flagField = (pos: Position, gameBoard: React.MutableRefObject<GameBoard>): void => {
+  if (gameBoard.current.at(pos).state === FieldState.VISITED) {
+    return;
+  }
 
-  return boardCopy;
+  const field = gameBoard.current.at(pos);
+  field.state = field.state === FieldState.FLAGGED ? FieldState.HIDDEN : FieldState.FLAGGED;
 };

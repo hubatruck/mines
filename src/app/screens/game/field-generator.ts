@@ -1,11 +1,11 @@
 import { BOARD_SIZE } from '../../types';
-import { FieldState, GameBoard } from './game-types';
+import { FieldState, GameBoard, GameField } from './game-types';
 
 const isBomb = (difficulty: BOARD_SIZE): boolean => {
   return Math.random() * 100 < difficulty * 5 + 10;
 };
 export const fieldGenerator = (size: number, difficulty: BOARD_SIZE): GameBoard => {
-  const initialBoard = Array.from({ length: size }, () =>
+  const initialBoard: GameField[][] = Array.from({ length: size }, () =>
     Array.from({ length: size }, () => ({
       state: FieldState.HIDDEN,
       isBomb: isBomb(difficulty),
@@ -36,5 +36,5 @@ export const fieldGenerator = (size: number, difficulty: BOARD_SIZE): GameBoard 
       }
     }
   }
-  return initialBoard;
+  return new GameBoard(initialBoard);
 };

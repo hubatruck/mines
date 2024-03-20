@@ -20,7 +20,7 @@ export const GameScreen: FC = () => {
 
     const newSize = (Number(difficulty) + 1) * 10;
     setSize(newSize);
-    setGameBoard(fieldGenerator(newSize, Number(difficulty)));
+    gameBoard.current = fieldGenerator(newSize, Number(difficulty));
   }, [difficulty]);
 
   const onClick = useCallback(
