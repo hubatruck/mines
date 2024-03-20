@@ -1,6 +1,6 @@
 import { useDebouncedCallback } from 'use-debounce';
 import React, { ForwardedRef, forwardRef, MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
-import { GameBoard, HandlerArgs } from '../game-types';
+import { GameBoard, HandlerArgs } from '../game-board/board-types.ts';
 
 import { useCanvasUtil } from './canvas-util-hook';
 import './canvas.css';

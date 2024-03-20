@@ -1,10 +1,10 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Canvas } from './canvas';
-import { BOARD_SIZE } from '../../types';
-import { GameBoard, HandlerArgs } from './game-types';
-import { fieldGenerator } from './field-generator';
-import { flagField, visitField } from './field-visitor';
+import { Difficulty } from '../../types';
+import { GameBoard, HandlerArgs } from './game-board/board-types.ts';
+import { boardGenerator } from './game-board/board-generator.ts';
+import { flagField, visitField } from './game-board/board-visitor.ts';
 import { useAudioPlayer } from './audio-player';
 
 export const GameScreen: FC = () => {
@@ -18,14 +18,14 @@ export const GameScreen: FC = () => {
 
   useEffect((): void => {
     if (difficulty === undefined) return;
-    if (!Object.keys(BOARD_SIZE).includes(difficulty ?? '')) {
+    if (!Object.keys(Difficulty).includes(difficulty ?? '')) {
       setSize(10);
       return;
     }
 
     const newSize = (Number(difficulty) + 1) * 10;
     setSize(newSize);
-    gameBoard.current = fieldGenerator(newSize, Number(difficulty));
+    gameBoard.current = boardGenerator(newSize, Number(difficulty));
   }, [difficulty]);
 
   const onClick = useCallback(

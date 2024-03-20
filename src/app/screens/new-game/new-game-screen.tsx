@@ -2,12 +2,12 @@ import { FC, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppHeader, HomeButton } from '../../components';
 import { DifficultySelector } from './difficulty-selector.tsx';
-import { BOARD_SIZE } from '../../types';
+import { Difficulty } from '../../types';
 
 export const NewGameScreen: FC = () => {
   const navigate = useNavigate();
 
-  const [difficulty, setDifficulty] = useState<BOARD_SIZE>(BOARD_SIZE.EASY);
+  const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.EASY);
 
   const onStart = useCallback(() => {
     navigate(`/game/${difficulty}`);

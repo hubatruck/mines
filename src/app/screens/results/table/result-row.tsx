@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Result } from '../types/result-types';
-import { BOARD_SIZE } from '../../../types';
+import { Difficulty } from '../../../types';
 
 import './results-table.css';
 
@@ -9,10 +9,10 @@ type Props = {
 };
 
 const boardSizeMap = {
-  [BOARD_SIZE.EASY]: 'Easy (10x10)',
-  [BOARD_SIZE.NORMAL]: 'Normal (20x20)',
-  [BOARD_SIZE.EXPERT]: 'Expert',
-  [BOARD_SIZE.HARD]: 'Hard',
+  [Difficulty.EASY]: 'Easy (10x10)',
+  [Difficulty.NORMAL]: 'Normal (20x20)',
+  [Difficulty.EXPERT]: 'Expert',
+  [Difficulty.HARD]: 'Hard',
 };
 
 export const ResultRow: FC<Props> = ({ result }) => {

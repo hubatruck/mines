@@ -1,15 +1,15 @@
 import { FC, useEffect, useState } from 'react';
 import { Result } from './types/result-types';
-import { ResultTable } from './table/result-table';
+import { ResultTable } from './table/result-table.tsx';
 import { AppHeader, HomeButton } from '../../components';
-import { BOARD_SIZE } from '../../types';
+import { Difficulty } from '../../types';
 
 export const ResultsScreen: FC = () => {
   const [results, setResults] = useState<Result[]>([]);
 
   useEffect(() => {
     // setResults(JSON.parse(localStorage.getItem('results') ?? '[]'));
-    setResults([{ date: new Date(), boardSize: BOARD_SIZE.EASY, gameTime: 100, score: 100 }]);
+    setResults([{ date: new Date(), boardSize: Difficulty.EASY, gameTime: 100, score: 100 }]);
   }, []);
 
   return (

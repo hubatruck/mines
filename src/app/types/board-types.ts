@@ -1,4 +1,4 @@
-export enum BOARD_SIZE {
+export enum Difficulty {
   EASY,
   NORMAL,
   HARD,

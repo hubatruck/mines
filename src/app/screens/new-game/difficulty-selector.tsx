@@ -1,31 +1,31 @@
 import { ChangeEvent, FC, useCallback, useState } from 'react';
-import { BOARD_SIZE } from '../../types';
+import { Difficulty } from '../../types';
 
 const difficultyMap = {
-  [BOARD_SIZE.EASY]: 'Easy',
-  [BOARD_SIZE.EXPERT]: 'Expert',
-  [BOARD_SIZE.HARD]: 'Hard',
-  [BOARD_SIZE.NORMAL]: 'Normal',
+  [Difficulty.EASY]: 'Easy',
+  [Difficulty.EXPERT]: 'Expert',
+  [Difficulty.HARD]: 'Hard',
+  [Difficulty.NORMAL]: 'Normal',
 };
 
 type Props = {
-  onDifficultyChange: (difficulty: BOARD_SIZE) => any;
+  onDifficultyChange: (difficulty: Difficulty) => unknown;
 };
 
 export const DifficultySelector: FC<Props> = ({ onDifficultyChange }) => {
-  const [value, setValue] = useState(BOARD_SIZE.EASY);
+  const [value, setValue] = useState(Difficulty.EASY);
 
-  const onChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
-    const castedValue = event.target.value as any as BOARD_SIZE;
+  const onChange = useCallback((event: ChangeEvent<HTMLSelectElement>): void => {
+    const castedValue = event.target.value as unknown as Difficulty;
     setValue(castedValue);
     onDifficultyChange(castedValue);
   }, []);
 
   return (
     <select value={value} onChange={onChange}>
-      {Object.keys(difficultyMap).map((key) => (
+      {Object.keys(difficultyMap).map((key: string) => (
         <option key={key} value={key}>
-          {difficultyMap[key as any as BOARD_SIZE]}
+          {difficultyMap[key as unknown as Difficulty]}
         </option>
       ))}
     </select>

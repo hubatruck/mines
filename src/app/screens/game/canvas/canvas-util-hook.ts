@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Coordinate, FieldState, GameBoard, GameField, Position } from '../game-types';
+import { Coordinate, FieldState, GameBoard, GameField, Position } from '../game-board/board-types.ts';
 
 interface RefObject<T> {
   /**

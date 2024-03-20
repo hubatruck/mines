@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Result } from '../types/result-types';
-import { ResultRow } from './result-row';
+import { ResultRow } from './result-row.tsx';
 import './results-table.css';
 
 type Props = {
