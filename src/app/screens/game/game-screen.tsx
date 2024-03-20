@@ -13,7 +13,7 @@ export const GameScreen: FC = () => {
   const navigate = useNavigate();
 
   const [size, setSize] = useState(-1);
-  const gameBoard = useRef<GameBoard>([[]]);
+  const gameBoard = useRef<GameBoard>(new GameBoard([[]]));
   const [gameOver, setGameOver] = useState(false);
 
   useEffect((): void => {

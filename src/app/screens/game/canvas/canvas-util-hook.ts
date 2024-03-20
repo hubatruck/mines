@@ -85,10 +85,10 @@ export const useCanvasUtil = (canvasRef: RefObject<HTMLCanvasElement>) => {
     return { col: adjustedY, row: adjustedX };
   };
 
-  const drawFields = useCallback((gameBoard: GameBoard) => {
+  const drawFields = useCallback((gameBoard?: GameBoard): void => {
     const canvas: HTMLCanvasElement | null = canvasRef.current;
     const ctx = canvas?.getContext('2d');
-    if (!(canvas && ctx)) return;
+    if (!(canvas && ctx && gameBoard)) return;
 
     const cellCount = gameBoard.size();
 
