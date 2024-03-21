@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { Result } from '../types/result-types';
 import { ResultRow } from './result-row.tsx';
 import './results-table.css';
+import { Result } from '../../../types/result-types';
 
 type Props = {
   results: Result[];
@@ -9,7 +9,7 @@ type Props = {
 
 export const ResultTable: FC<Props> = ({ results }) => {
   return (
-    <table>
+    <table className="centered">
       <thead>
         <tr>
           <th>Score</th>
@@ -19,8 +19,8 @@ export const ResultTable: FC<Props> = ({ results }) => {
         </tr>
       </thead>
       <tbody>
-        {results.map((result) => (
-          <ResultRow key={result.date.toUTCString()} result={result} />
+        {results.map((result: Result) => (
+          <ResultRow key={result.date} result={result} />
         ))}
       </tbody>
     </table>

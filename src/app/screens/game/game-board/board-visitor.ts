@@ -3,6 +3,7 @@ import { everyNeighbour } from './board-util';
 
 const visitor = (pos: Position, gameBoard: GameBoard): number => {
   const current: GameField = gameBoard.at(pos);
+  if (current.state === FieldState.VISITED) return 0;
   current.state = FieldState.VISITED;
   if (current.bombNeighbours > 0 || current.isBomb) return 1;
 

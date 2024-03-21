@@ -1,27 +1,42 @@
-import { FC } from 'react';
-import { Result } from '../types/result-types';
-import { Difficulty } from '../../../types';
+import { FC, useMemo } from 'react';
 
 import './results-table.css';
+import { Result } from '../../../types/result-types';
 
 type Props = {
   result: Result;
 };
 
-const boardSizeMap = {
-  [Difficulty.EASY]: 'Easy (10x10)',
-  [Difficulty.NORMAL]: 'Normal (20x20)',
-  [Difficulty.EXPERT]: 'Expert',
-  [Difficulty.HARD]: 'Hard',
+const boardSizeMap = (size: number): string => {
+  const name = (() => {
+    switch (size) {
+      case 10:
+        return 'Easy';
+      case 20:
+        return 'Normal';
+      case 30:
+        return 'Hard';
+      case 40:
+        return 'Expert';
+      default:
+        return 'Custom';
+    }
+  })();
+  return `${name} (${size}x${size})`;
 };
 
 export const ResultRow: FC<Props> = ({ result }) => {
+  const score = useMemo(() => {
+    const partialScore = result.size ** 4 - result.time ** 2;
+    return result.won ? Math.max(partialScore, 0) : Math.min(-partialScore, 0);
+  }, [result]);
+
   return (
     <tr>
-      <td>{result.score}</td>
-      <td>{boardSizeMap[result.boardSize]}</td>
-      <td>{result.gameTime}s</td>
-      <td>{result.date.toDateString()}</td>
+      <td>{score}</td>
+      <td>{boardSizeMap(result.size)}</td>
+      <td>{result.time}s</td>
+      <td>{new Date(result.date.toString()).toLocaleString()}</td>
     </tr>
   );
 };

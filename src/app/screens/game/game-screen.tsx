@@ -1,5 +1,6 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useStopwatch } from 'react-timer-hook';
 import { Canvas } from './canvas';
 import { Difficulty } from '../../types';
 import { GameBoard, HandlerArgs } from './game-board/board-types';
@@ -7,12 +8,14 @@ import { boardGenerator } from './game-board/board-generator';
 import { flagField, visitField } from './game-board/board-visitor';
 import { useAudioPlayer } from './audio-player';
 import { StatsBar } from './stats-bar/stats-bar.tsx';
+import { useGameResults } from '../../hooks/game-results-hook';
 
 import './game-screen.css';
 
 export const GameScreen: FC = () => {
   const { difficulty } = useParams();
   const audioPlayer = useAudioPlayer();
+  const gameResult = useGameResults();
   const navigate = useNavigate();
 
   const [size, setSize] = useState(-1);
@@ -31,14 +34,26 @@ export const GameScreen: FC = () => {
     setGameBoard(boardGenerator(newSize, Number(difficulty)));
   }, [difficulty]);
 
+  const endGame = useCallback(
+    (path: string, won: boolean, audio: keyof ReturnType<typeof useAudioPlayer>): void => {
+      audioPlayer[audio]?.play();
+      gameResult.add({
+        won,
+        size,
+        date: new Date(),
+        time: 0,
+      });
+      alert('Game ended. Check table and continue.');
+      navigate(path, { state: { time: totalSeconds } });
+    },
+    [size, navigate, audioPlayer],
+  );
+
   const onClick = useCallback(
     ({ pos, isLeftClick }: HandlerArgs): void => {
       if (gameBoard && gameBoard.size() > 0 && !gameOver) {
         if (gameBoard.at(pos).isBomb && isLeftClick) {
-          setGameOver(true);
-          audioPlayer.bomb?.play();
-          alert('game over :c');
-          navigate('/over');
+          endGame('/over', false, 'bomb');
           return;
         }
 
@@ -53,10 +68,7 @@ export const GameScreen: FC = () => {
 
         setGameBoard(updatedBoard);
         if (updatedBoard?.won()) {
-          setGameOver(true);
-          audioPlayer.won?.play();
-          alert('done');
-          navigate('/won');
+          endGame('/won', true, 'won');
         }
       }
     },
