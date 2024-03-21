@@ -45,12 +45,12 @@ export const GameScreen: FC = () => {
         won,
         size,
         date: new Date(),
-        time: 0,
+        time: totalSeconds,
       });
       alert('Game ended. Check table and continue.');
       navigate(path, { state: { time: totalSeconds } });
     },
-    [size, navigate, audioPlayer, totalSeconds],
+    [size, navigate, audioPlayer, pause, totalSeconds],
   );
 
   const onClick = useCallback(

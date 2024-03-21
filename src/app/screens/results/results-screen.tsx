@@ -22,6 +22,7 @@ export const ResultsScreen: FC = () => {
     <div className="scrollable">
       <AppHeader subTitle="Results" />
       {results.length ? <ResultTable results={results} /> : <span className="noResults">No results</span>}
+
       {results.length > 0 && (
         <button type="button" onClick={onClear}>
           Clear

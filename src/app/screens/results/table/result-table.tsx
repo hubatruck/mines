@@ -20,7 +20,7 @@ export const ResultTable: FC<Props> = ({ results }) => {
       </thead>
       <tbody>
         {results.map((result: Result) => (
-          <ResultRow key={result.date} result={result} />
+          <ResultRow key={result.date.toString()} result={result} />
         ))}
       </tbody>
     </table>

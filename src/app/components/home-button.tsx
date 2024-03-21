@@ -1,10 +1,8 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { LinkButton } from './link-button.tsx';
 
 export const HomeButton: FC = () => (
   <div>
-    <Link to="/">
-      <button type="button">Home</button>
-    </Link>
+    <LinkButton path="/">Home</LinkButton>
   </div>
 );
