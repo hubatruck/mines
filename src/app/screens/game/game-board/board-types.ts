@@ -16,13 +16,11 @@ export class GameBoard {
 
   private bombCount: number = 0;
 
-  private flaggedFieldCount: number = 0;
-
   private remainingFields: number = 0;
 
-  constructor(board: GameField[][]) {
-    this.boardData = board;
-    this.remainingFields = board.length ** 2;
+  constructor(board: GameField[][], remainingFields?: number) {
+    this.cloneBoard(board);
+    this.remainingFields = remainingFields ?? board.length ** 2;
     this.countBombs();
   }
 
@@ -51,10 +49,8 @@ export class GameBoard {
     const field: GameField = this.at(pos);
     if (field.state === FieldState.FLAGGED) {
       field.state = FieldState.HIDDEN;
-      this.flaggedFieldCount--;
     } else {
       field.state = FieldState.FLAGGED;
-      this.flaggedFieldCount++;
     }
   }
 
@@ -62,8 +58,19 @@ export class GameBoard {
     return this.bombCount;
   }
 
-  public flagsUsed(): number {
-    return this.flaggedFieldCount;
+  public countFlags(): number {
+    let flags = 0;
+    if (this.size() < 2) return flags;
+    for (let row = 0; row < this.size(); row++) {
+      for (let col = 0; col < this.size(); col++) {
+        flags += this.boardData[row][col].state === FieldState.FLAGGED ? 1 : 0;
+      }
+    }
+    return flags;
+  }
+
+  public clone(): GameBoard {
+    return new GameBoard(this.boardData, this.remainingFields);
   }
 
   private countBombs(): void {
@@ -72,6 +79,19 @@ export class GameBoard {
     for (let row = 0; row < this.size(); row++) {
       for (let col = 0; col < this.size(); col++) {
         this.bombCount += this.boardData[row][col].isBomb ? 1 : 0;
+      }
+    }
+  }
+
+  private cloneBoard(board: GameField[][]) {
+    this.boardData = Array.from({ length: board.length });
+
+    for (let i = 0; i < board.length; i++) {
+      this.boardData[i] = Array.from({ length: board.length });
+      for (let j = 0; j < board.length; j++) {
+        this.boardData[i][j] = {
+          ...board[i][j],
+        };
       }
     }
   }

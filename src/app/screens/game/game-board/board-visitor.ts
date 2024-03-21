@@ -1,4 +1,3 @@
-import React from 'react';
 import { FieldState, GameBoard, GameField, Position } from './board-types';
 import { everyNeighbour } from './board-util';
 
@@ -20,16 +19,23 @@ const visitor = (pos: Position, gameBoard: GameBoard): number => {
   return visitedCount;
 };
 
-export const visitField = (pos: Position, gameBoard: React.MutableRefObject<GameBoard | undefined>): void => {
-  if (!gameBoard.current) return;
-  const visitedCount = visitor(pos, gameBoard.current);
-  gameBoard.current.openFields(visitedCount);
+export const visitField = (pos: Position, gameBoard: GameBoard | undefined): GameBoard | undefined => {
+  const clonedBoard = gameBoard?.clone();
+  if (!clonedBoard) return clonedBoard;
+
+  const visitedCount = visitor(pos, clonedBoard);
+  clonedBoard.openFields(visitedCount);
+
+  return clonedBoard;
 };
 
-export const flagField = (pos: Position, gameBoard: React.MutableRefObject<GameBoard | undefined>): void => {
-  if (!gameBoard.current || gameBoard.current.at(pos).state === FieldState.VISITED) {
-    return;
+export const flagField = (pos: Position, gameBoard: GameBoard | undefined): GameBoard | undefined => {
+  const clonedBoard = gameBoard?.clone();
+  if (!clonedBoard || clonedBoard.at(pos).state === FieldState.VISITED) {
+    return clonedBoard;
   }
 
-  gameBoard.current.toggleFlag(pos);
+  clonedBoard.toggleFlag(pos);
+
+  return clonedBoard;
 };

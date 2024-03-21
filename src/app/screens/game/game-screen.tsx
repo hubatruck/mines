@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Canvas } from './canvas';
 import { Difficulty } from '../../types';
@@ -16,7 +16,7 @@ export const GameScreen: FC = () => {
   const navigate = useNavigate();
 
   const [size, setSize] = useState(-1);
-  const gameBoard = useRef<GameBoard | undefined>(undefined);
+  const [gameBoard, setGameBoard] = useState<undefined | GameBoard>();
   const [gameOver, setGameOver] = useState(false);
 
   useEffect((): void => {
@@ -28,21 +28,13 @@ export const GameScreen: FC = () => {
 
     const newSize = (Number(difficulty) + 1) * 10;
     setSize(newSize);
-    gameBoard.current = boardGenerator(newSize, Number(difficulty));
+    setGameBoard(boardGenerator(newSize, Number(difficulty)));
   }, [difficulty]);
 
   const onClick = useCallback(
     ({ pos, isLeftClick }: HandlerArgs): void => {
-      if (gameBoard.current && gameBoard.current.size() > 0 && !gameOver) {
-        if (isLeftClick) {
-          visitField(pos, gameBoard);
-          audioPlayer.click?.play();
-        } else {
-          flagField(pos, gameBoard);
-          audioPlayer.flag?.play();
-        }
-
-        if (gameBoard.current.at(pos).isBomb && isLeftClick) {
+      if (gameBoard && gameBoard.size() > 0 && !gameOver) {
+        if (gameBoard.at(pos).isBomb && isLeftClick) {
           setGameOver(true);
           audioPlayer.bomb?.play();
           alert('game over :c');
@@ -50,7 +42,17 @@ export const GameScreen: FC = () => {
           return;
         }
 
-        if (gameBoard.current.won()) {
+        let updatedBoard;
+        if (isLeftClick) {
+          updatedBoard = visitField(pos, gameBoard);
+          audioPlayer.click?.play();
+        } else {
+          updatedBoard = flagField(pos, gameBoard);
+          audioPlayer.flag?.play();
+        }
+
+        setGameBoard(updatedBoard);
+        if (updatedBoard?.won()) {
           setGameOver(true);
           audioPlayer.won?.play();
           alert('done');
@@ -58,13 +60,13 @@ export const GameScreen: FC = () => {
         }
       }
     },
-    [gameOver, audioPlayer],
+    [gameOver, audioPlayer, gameBoard],
   );
 
   return size > 0 ? (
     <div className="game-container">
-      <Canvas ref={gameBoard} onClick={onClick} />
-      <StatsBar ref={gameBoard} />
+      <Canvas gameBoard={gameBoard} onClick={onClick} />
+      <StatsBar gameBoard={gameBoard} />
     </div>
   ) : (
     <div>Loading...</div>

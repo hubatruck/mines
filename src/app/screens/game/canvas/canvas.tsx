@@ -1,5 +1,5 @@
 import { useDebouncedCallback } from 'use-debounce';
-import React, { forwardRef, MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useRef } from 'react';
 import { GameBoard, HandlerArgs } from '../game-board/board-types';
 
 import { useCanvasUtil } from './canvas-util-hook';
@@ -7,33 +7,28 @@ import './canvas.css';
 
 type Props = {
   onClick: (args: HandlerArgs) => unknown;
+  gameBoard: GameBoard | undefined;
 };
 
-export const Canvas = forwardRef<unknown, Props>(({ onClick }, gameBoardRef: unknown) => {
+export const Canvas: FC<Props> = ({ onClick, gameBoard }) => {
   const ref = useRef<HTMLCanvasElement>(null);
   const cu = useCanvasUtil(ref);
 
-  const gameBoard: MutableRefObject<GameBoard> = useMemo(
-    () => gameBoardRef as MutableRefObject<GameBoard>,
-    [gameBoardRef],
-  );
   const cellCount = useMemo(() => {
-    return gameBoard.current && gameBoard.current.size ? gameBoard.current.size() : 0;
-  }, []);
+    return gameBoard ? gameBoard.size() : 0;
+  }, [gameBoard]);
 
   const reDraw = useCallback((): void => {
-    setTimeout((): void => {
-      cu.fitScreen();
-      cu.drawFields(gameBoard?.current);
-      cu.drawLines(cellCount);
-    }, 10);
-  }, [cellCount, cu.drawLines, cu.fitScreen]);
+    cu.fitScreen();
+    cu.drawFields(gameBoard);
+    cu.drawLines(cellCount);
+  }, [cellCount, cu.drawLines, cu.fitScreen, gameBoard]);
 
   const debouncedReDraw = useDebouncedCallback(() => reDraw(), 200);
 
   useEffect((): void => {
     reDraw();
-  }, []);
+  }, [gameBoard]);
 
   const onClickHandler = useCallback(
     (event: React.MouseEvent<HTMLCanvasElement>): void => {
@@ -45,7 +40,7 @@ export const Canvas = forwardRef<unknown, Props>(({ onClick }, gameBoardRef: unk
       });
       reDraw();
     },
-    [reDraw],
+    [reDraw, cellCount],
   );
 
   window.addEventListener('resize', debouncedReDraw);
@@ -55,6 +50,4 @@ export const Canvas = forwardRef<unknown, Props>(({ onClick }, gameBoardRef: unk
       <canvas ref={ref} onContextMenu={onClickHandler} onClick={onClickHandler} />
     </div>
   );
-});
-
-Canvas.displayName = 'Canvas';
+};
