@@ -6,6 +6,9 @@ import { GameBoard, HandlerArgs } from './game-board/board-types';
 import { boardGenerator } from './game-board/board-generator';
 import { flagField, visitField } from './game-board/board-visitor';
 import { useAudioPlayer } from './audio-player';
+import { StatsBar } from './stats-bar/stats-bar.tsx';
+
+import './game-screen.css';
 
 export const GameScreen: FC = () => {
   const { difficulty } = useParams();
@@ -58,5 +61,12 @@ export const GameScreen: FC = () => {
     [gameOver, audioPlayer],
   );
 
-  return size > 0 ? <Canvas ref={gameBoard} onClick={onClick} /> : <div>Loading...</div>;
+  return size > 0 ? (
+    <div className="game-container">
+      <Canvas ref={gameBoard} onClick={onClick} />
+      <StatsBar ref={gameBoard} />
+    </div>
+  ) : (
+    <div>Loading...</div>
+  );
 };

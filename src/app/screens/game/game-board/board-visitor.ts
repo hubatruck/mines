@@ -31,6 +31,5 @@ export const flagField = (pos: Position, gameBoard: React.MutableRefObject<GameB
     return;
   }
 
-  const field: GameField = gameBoard.current.at(pos);
-  field.state = field.state === FieldState.FLAGGED ? FieldState.HIDDEN : FieldState.FLAGGED;
+  gameBoard.current.toggleFlag(pos);
 };

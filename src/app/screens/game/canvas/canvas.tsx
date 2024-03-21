@@ -50,7 +50,11 @@ export const Canvas = forwardRef<unknown, Props>(({ onClick }, gameBoardRef: unk
 
   window.addEventListener('resize', debouncedReDraw);
 
-  return <canvas ref={ref} onContextMenu={onClickHandler} onClick={onClickHandler} />;
+  return (
+    <div className="canvas-container">
+      <canvas ref={ref} onContextMenu={onClickHandler} onClick={onClickHandler} />
+    </div>
+  );
 });
 
 Canvas.displayName = 'Canvas';

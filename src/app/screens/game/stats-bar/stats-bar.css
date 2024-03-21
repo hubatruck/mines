@@ -1,0 +1,9 @@
+.stats-bar {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    vertical-align: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+}

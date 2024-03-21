@@ -60,10 +60,10 @@ export const useCanvasUtil = (canvasRef: RefObject<HTMLCanvasElement>) => {
 
   const fitScreen = useCallback((): void => {
     const canvas: HTMLCanvasElement | null = canvasRef.current;
-    if (!canvas) return;
+    if (!(canvas && canvas.parentElement)) return;
 
-    canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.parentElement.clientHeight;
   }, []);
 
   const getClickedCell = ({ x, y, cellCount }: Coordinate & { cellCount: number }): Position => {

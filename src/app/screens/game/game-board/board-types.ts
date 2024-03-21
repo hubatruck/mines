@@ -16,6 +16,8 @@ export class GameBoard {
 
   private bombCount: number = 0;
 
+  private flaggedFieldCount: number = 0;
+
   private remainingFields: number = 0;
 
   constructor(board: GameField[][]) {
@@ -43,6 +45,25 @@ export class GameBoard {
 
   public size(): number {
     return this.boardData.length;
+  }
+
+  public toggleFlag(pos: Position): void {
+    const field: GameField = this.at(pos);
+    if (field.state === FieldState.FLAGGED) {
+      field.state = FieldState.HIDDEN;
+      this.flaggedFieldCount--;
+    } else {
+      field.state = FieldState.FLAGGED;
+      this.flaggedFieldCount++;
+    }
+  }
+
+  public howManyBombs(): number {
+    return this.bombCount;
+  }
+
+  public flagsUsed(): number {
+    return this.flaggedFieldCount;
   }
 
   private countBombs(): void {
