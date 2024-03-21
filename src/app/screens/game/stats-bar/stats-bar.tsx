@@ -6,9 +6,10 @@ import { Separator } from './separator.tsx';
 
 type Props = {
   gameBoard: GameBoard | undefined;
+  time: number;
 };
 
-export const StatsBar: FC<Props> = ({ gameBoard }) => {
+export const StatsBar: FC<Props> = ({ gameBoard, time }) => {
   const [cheater, setCheater] = useState(true);
   const flags = useMemo(() => {
     return gameBoard?.countFlags() ?? '-';
@@ -18,12 +19,13 @@ export const StatsBar: FC<Props> = ({ gameBoard }) => {
 
   return (
     <div className="stats-bar">
+      <span>⏱ {time}s</span>
       <div className="stats">
         {showData && (
           <>
-            <div>💣 {gameBoard?.howManyBombs() ?? '-'}</div>
+            <div>💣{gameBoard?.howManyBombs() ?? '-'}</div>
             <Separator />
-            <div>⛳ {flags}</div>
+            <div>⛳{flags}</div>
 
             {/* <button>⛳Flag</button> */}
             {/* <button>🥄Discover</button> */}

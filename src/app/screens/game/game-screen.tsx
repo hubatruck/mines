@@ -18,9 +18,12 @@ export const GameScreen: FC = () => {
   const gameResult = useGameResults();
   const navigate = useNavigate();
 
+  const { totalSeconds, pause } = useStopwatch({
+    autoStart: true,
+  });
+
   const [size, setSize] = useState(-1);
   const [gameBoard, setGameBoard] = useState<undefined | GameBoard>();
-  const [gameOver, setGameOver] = useState(false);
 
   useEffect((): void => {
     if (difficulty === undefined) return;
@@ -37,6 +40,7 @@ export const GameScreen: FC = () => {
   const endGame = useCallback(
     (path: string, won: boolean, audio: keyof ReturnType<typeof useAudioPlayer>): void => {
       audioPlayer[audio]?.play();
+      pause();
       gameResult.add({
         won,
         size,
@@ -46,12 +50,12 @@ export const GameScreen: FC = () => {
       alert('Game ended. Check table and continue.');
       navigate(path, { state: { time: totalSeconds } });
     },
-    [size, navigate, audioPlayer],
+    [size, navigate, audioPlayer, totalSeconds],
   );
 
   const onClick = useCallback(
     ({ pos, isLeftClick }: HandlerArgs): void => {
-      if (gameBoard && gameBoard.size() > 0 && !gameOver) {
+      if (gameBoard && gameBoard.size() > 0) {
         if (gameBoard.at(pos).isBomb && isLeftClick) {
           endGame('/over', false, 'bomb');
           return;
@@ -72,13 +76,13 @@ export const GameScreen: FC = () => {
         }
       }
     },
-    [gameOver, audioPlayer, gameBoard],
+    [audioPlayer, gameBoard],
   );
 
   return size > 0 ? (
     <div className="game-container">
       <Canvas gameBoard={gameBoard} onClick={onClick} />
-      <StatsBar gameBoard={gameBoard} />
+      <StatsBar time={totalSeconds} gameBoard={gameBoard} />
     </div>
   ) : (
     <div>Loading...</div>
