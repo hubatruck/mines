@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AboutScreen } from './app/screens/about';
 import { ResultsScreen } from './app/screens/results';
 import { NewGameScreen } from './app/screens/new-game';
@@ -8,7 +8,7 @@ import { GameLostScreen, GameWonScreen } from './app/screens/game-over';
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <HashRouter basename="/">
       <Routes>
         <Route path="/" element={<Navigate to="/new" />} />
         <Route path="/game/:difficulty" element={<GameScreen />} />
@@ -19,7 +19,7 @@ const App = () => {
         <Route path="/about" element={<AboutScreen />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 

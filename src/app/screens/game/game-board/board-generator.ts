@@ -1,6 +1,6 @@
 import { Difficulty } from '../../../types';
-import { FieldState, GameBoard, GameField } from './board-types.ts';
-import { everyNeighbour } from './board-util.ts';
+import { FieldState, GameBoard, GameField } from './board-types';
+import { everyNeighbour } from './board-util';
 
 const isBomb = (difficulty: Difficulty): boolean => {
   return Math.random() * 100 < difficulty * 5 + 10;

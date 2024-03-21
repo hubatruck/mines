@@ -1,6 +1,6 @@
 import React from 'react';
-import { FieldState, GameBoard, GameField, Position } from './board-types.ts';
-import { everyNeighbour } from './board-util.ts';
+import { FieldState, GameBoard, GameField, Position } from './board-types';
+import { everyNeighbour } from './board-util';
 
 const visitor = (pos: Position, gameBoard: GameBoard): number => {
   const current: GameField = gameBoard.at(pos);
@@ -20,13 +20,14 @@ const visitor = (pos: Position, gameBoard: GameBoard): number => {
   return visitedCount;
 };
 
-export const visitField = (pos: Position, gameBoard: React.MutableRefObject<GameBoard>): void => {
+export const visitField = (pos: Position, gameBoard: React.MutableRefObject<GameBoard | undefined>): void => {
+  if (!gameBoard.current) return;
   const visitedCount = visitor(pos, gameBoard.current);
   gameBoard.current.openFields(visitedCount);
 };
 
-export const flagField = (pos: Position, gameBoard: React.MutableRefObject<GameBoard>): void => {
-  if (gameBoard.current.at(pos).state === FieldState.VISITED) {
+export const flagField = (pos: Position, gameBoard: React.MutableRefObject<GameBoard | undefined>): void => {
+  if (!gameBoard.current || gameBoard.current.at(pos).state === FieldState.VISITED) {
     return;
   }
 

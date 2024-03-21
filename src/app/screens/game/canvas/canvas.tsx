@@ -1,6 +1,6 @@
 import { useDebouncedCallback } from 'use-debounce';
 import React, { forwardRef, MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
-import { GameBoard, HandlerArgs } from '../game-board/board-types.ts';
+import { GameBoard, HandlerArgs } from '../game-board/board-types';
 
 import { useCanvasUtil } from './canvas-util-hook';
 import './canvas.css';
@@ -14,7 +14,7 @@ export const Canvas = forwardRef<unknown, Props>(({ onClick }, gameBoardRef: unk
   const cu = useCanvasUtil(ref);
 
   const gameBoard: MutableRefObject<GameBoard> = useMemo(
-    () => gameBoard as MutableRefObject<GameBoard>,
+    () => gameBoardRef as MutableRefObject<GameBoard>,
     [gameBoardRef],
   );
   const cellCount = useMemo(() => {

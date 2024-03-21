@@ -47,6 +47,7 @@ export class GameBoard {
 
   private countBombs(): void {
     this.bombCount = 0;
+    if (this.size() < 2) return;
     for (let row = 0; row < this.size(); row++) {
       for (let col = 0; col < this.size(); col++) {
         this.bombCount += this.boardData[row][col].isBomb ? 1 : 0;

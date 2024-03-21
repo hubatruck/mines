@@ -1,4 +1,4 @@
-import { Position } from './board-types.ts';
+import { Position } from './board-types';
 
 export const everyNeighbour = ({ row, col }: Position, size: number, cb: (newPos: Position) => unknown): void => {
   [

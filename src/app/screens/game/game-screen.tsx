@@ -2,9 +2,9 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Canvas } from './canvas';
 import { Difficulty } from '../../types';
-import { GameBoard, HandlerArgs } from './game-board/board-types.ts';
-import { boardGenerator } from './game-board/board-generator.ts';
-import { flagField, visitField } from './game-board/board-visitor.ts';
+import { GameBoard, HandlerArgs } from './game-board/board-types';
+import { boardGenerator } from './game-board/board-generator';
+import { flagField, visitField } from './game-board/board-visitor';
 import { useAudioPlayer } from './audio-player';
 
 export const GameScreen: FC = () => {
@@ -13,7 +13,7 @@ export const GameScreen: FC = () => {
   const navigate = useNavigate();
 
   const [size, setSize] = useState(-1);
-  const gameBoard = useRef<GameBoard>(new GameBoard([[]]));
+  const gameBoard = useRef<GameBoard | undefined>(undefined);
   const [gameOver, setGameOver] = useState(false);
 
   useEffect((): void => {
@@ -30,7 +30,7 @@ export const GameScreen: FC = () => {
 
   const onClick = useCallback(
     ({ pos, isLeftClick }: HandlerArgs): void => {
-      if (gameBoard.current.size() > 0 && !gameOver) {
+      if (gameBoard.current && gameBoard.current.size() > 0 && !gameOver) {
         if (isLeftClick) {
           visitField(pos, gameBoard);
           audioPlayer.click?.play();
@@ -39,16 +39,13 @@ export const GameScreen: FC = () => {
           audioPlayer.flag?.play();
         }
 
-        // console.log(
-        //   'end',
-        //   gameOver,
-        //   'left click:',
-        //   isLeftClick,
-        //   'bomb',
-        //   gameBoard.current[pos.col][pos.row].isBomb,
-        //   pos,
-        //   gameBoard,
-        // );
+        if (gameBoard.current.at(pos).isBomb && isLeftClick) {
+          setGameOver(true);
+          audioPlayer.bomb?.play();
+          alert('game over :c');
+          navigate('/over');
+          return;
+        }
 
         if (gameBoard.current.won()) {
           setGameOver(true);
@@ -56,14 +53,6 @@ export const GameScreen: FC = () => {
           alert('done');
           navigate('/won');
         }
-
-        if (gameBoard.current.at(pos).isBomb && isLeftClick) {
-          setGameOver(true);
-          audioPlayer.bomb?.play();
-          alert('game over :c');
-          navigate('/over');
-        }
-        // gameBoard.current = updatedBoard;
       }
     },
     [gameOver, audioPlayer],
