@@ -11,7 +11,7 @@ type Props = {
 export const EndGif: FC<Props> = ({ won, time }) => {
   let gif: GifEntry;
   if (!won) {
-    gif = time > 0 ? randomGif('zeroTime') : randomGif('lost');
+    gif = time === 0 ? randomGif('zeroTime') : randomGif('lost');
   } else {
     gif = randomGif('won');
   }
