@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { AppHeader, HomeButton, LinkButton } from '../../components';
+import { EndGif } from './end-gif/end-gif.tsx';
 
 export const GameLostScreen = () => {
   const {
@@ -7,7 +8,7 @@ export const GameLostScreen = () => {
   } = useLocation();
 
   return (
-    <div className="centered">
+    <div className="centered scrollable">
       <AppHeader subTitle="Game over" />
 
       <h2>
@@ -16,6 +17,8 @@ export const GameLostScreen = () => {
 
       <LinkButton path="/new">Again</LinkButton>
       <HomeButton />
+
+      <EndGif won={false} time={time} />
     </div>
   );
 };

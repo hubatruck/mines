@@ -1,0 +1,11 @@
+.gif-holder {
+    display: flex;
+    flex-direction: column;
+    max-width: min(30rem, 90vw);
+    margin: 0 auto;
+}
+
+.source {
+    font-size: 0.5rem;
+    color: gray;
+}
