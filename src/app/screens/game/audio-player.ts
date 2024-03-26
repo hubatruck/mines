@@ -24,3 +24,5 @@ export const useAudioPlayer = () => {
     won,
   };
 };
+
+export type Audio = keyof ReturnType<typeof useAudioPlayer>;

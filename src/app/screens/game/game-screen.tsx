@@ -1,16 +1,22 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useStopwatch } from 'react-timer-hook';
+import { useTimer } from 'use-timer';
 import { Canvas } from './canvas';
 import { Difficulty } from '../../types';
 import { GameBoard, HandlerArgs } from './game-board/board-types';
 import { boardGenerator } from './game-board/board-generator';
 import { flagField, visitField } from './game-board/board-visitor';
-import { useAudioPlayer } from './audio-player';
+import { Audio, useAudioPlayer } from './audio-player';
 import { StatsBar } from './stats-bar/stats-bar.tsx';
 import { useGameResults } from '../../hooks/game-results-hook';
 
 import './game-screen.css';
+
+type GameEndState = {
+  path: string;
+  won: boolean;
+  audio: Audio;
+};
 
 export const GameScreen: FC = () => {
   const { difficulty } = useParams();
@@ -18,12 +24,11 @@ export const GameScreen: FC = () => {
   const gameResult = useGameResults();
   const navigate = useNavigate();
 
-  const { totalSeconds, pause } = useStopwatch({
-    autoStart: true,
-  });
+  const { time, pause, start } = useTimer();
 
   const [size, setSize] = useState(-1);
   const [gameBoard, setGameBoard] = useState<undefined | GameBoard>();
+  const [gameEndState, setGameEndState] = useState<GameEndState | undefined>();
 
   useEffect((): void => {
     if (difficulty === undefined) return;
@@ -35,23 +40,34 @@ export const GameScreen: FC = () => {
     const newSize = (Number(difficulty) + 1) * 10;
     setSize(newSize);
     setGameBoard(boardGenerator(newSize, Number(difficulty)));
-  }, [difficulty]);
+    start();
+  }, [difficulty, start]);
 
-  const endGame = useCallback(
-    (path: string, won: boolean, audio: keyof ReturnType<typeof useAudioPlayer>): void => {
-      audioPlayer[audio]?.play();
-      pause();
-      gameResult.add({
-        won,
-        size,
-        date: new Date(),
-        time: totalSeconds,
-      });
-      alert('Game ended. Check table and continue.');
-      navigate(path, { state: { time: totalSeconds } });
-    },
-    [size, navigate, audioPlayer, pause, totalSeconds],
-  );
+  useEffect((): void => {
+    if (gameEndState === undefined) return;
+
+    const { audio, path, won } = gameEndState;
+
+    pause();
+
+    audioPlayer[audio]?.play();
+    gameResult.add({
+      won,
+      size,
+      date: new Date(),
+      time,
+    });
+    alert('Game ended. Check table and continue.');
+    navigate(path, { state: { time } });
+  }, [gameEndState, time, pause]);
+
+  const endGame = useCallback((path: string, won: boolean, audio: Audio): void => {
+    setGameEndState({
+      won,
+      path,
+      audio,
+    });
+  }, []);
 
   const onClick = useCallback(
     ({ pos, isLeftClick }: HandlerArgs): void => {
@@ -82,7 +98,7 @@ export const GameScreen: FC = () => {
   return size > 0 ? (
     <div className="game-container">
       <Canvas gameBoard={gameBoard} onClick={onClick} />
-      <StatsBar time={totalSeconds} gameBoard={gameBoard} />
+      <StatsBar time={time} gameBoard={gameBoard} />
     </div>
   ) : (
     <div>Loading...</div>

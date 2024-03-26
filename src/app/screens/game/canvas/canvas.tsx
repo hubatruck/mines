@@ -1,8 +1,8 @@
-import { useDebouncedCallback } from 'use-debounce';
 import React, { FC, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useDebounce } from '@uidotdev/usehooks';
 import { GameBoard, HandlerArgs } from '../game-board/board-types';
-
 import { useCanvasUtil } from './canvas-util-hook';
+
 import './canvas.css';
 
 type Props = {
@@ -24,7 +24,7 @@ export const Canvas: FC<Props> = ({ onClick, gameBoard }) => {
     cu.drawLines(cellCount);
   }, [cellCount, cu.drawLines, cu.fitScreen, gameBoard]);
 
-  const debouncedReDraw = useDebouncedCallback(() => reDraw(), 200);
+  const debouncedReDraw = useDebounce(reDraw, 200);
 
   useEffect((): void => {
     reDraw();
