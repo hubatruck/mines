@@ -34,7 +34,7 @@ function generateRoutes(): Promise<void> {
 }
 
 function routeGenerator(): Plugin {
-  const routesDir = path.resolve('app/routes');
+  const routesDir = path.resolve('src/routes');
 
   return {
     name: 'generate-routes',
